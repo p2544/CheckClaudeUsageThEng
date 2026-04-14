@@ -1,0 +1,50 @@
+{
+  "name": "claude-usage-dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "sync": "tsx scripts/sync.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate"
+  },
+  "packageManager": "pnpm@10.29.2",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "better-sqlite3",
+      "esbuild"
+    ]
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.99.0",
+    "@tanstack/react-router": "^1.168.21",
+    "@tanstack/react-start": "^1.167.39",
+    "@tanstack/react-table": "^8.21.3",
+    "better-sqlite3": "^12.9.0",
+    "chokidar": "^5.0.0",
+    "date-fns": "^4.1.0",
+    "drizzle-orm": "^0.45.2",
+    "lucide-react": "^1.8.0",
+    "pdfkit": "^0.18.0",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "recharts": "^3.8.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.6.0",
+    "@types/pdfkit": "^0.17.5",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "drizzle-kit": "^0.31.10",
+    "tailwindcss": "^4.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8"
+  }
+}

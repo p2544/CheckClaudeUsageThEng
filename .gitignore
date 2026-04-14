@@ -1,0 +1,12 @@
+node_modules/
+.output/
+dist/
+data/
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+.vinxi/
+.tanstack/
+.claude/
+src/routeTree.gen.ts

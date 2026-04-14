@@ -1,0 +1,156 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* Warm Parchment Design System — from DESIGN.md */
+
+  /* Semantic colors — light theme defaults */
+  --color-background: #f5f4ed;         /* Parchment */
+  --color-foreground: #141413;         /* Near Black */
+
+  --color-card: #faf9f5;              /* Ivory */
+  --color-card-foreground: #141413;
+
+  --color-popover: #faf9f5;
+  --color-popover-foreground: #141413;
+
+  --color-primary: #c96442;           /* Terracotta — CTA only */
+  --color-primary-foreground: #faf9f5;
+
+  --color-secondary: #e8e6dc;         /* Warm Sand */
+  --color-secondary-foreground: #4d4c48; /* Charcoal Warm */
+
+  --color-muted: #e8e6dc;
+  --color-muted-foreground: #87867f;  /* Stone Gray */
+
+  --color-accent: #e8e6dc;
+  --color-accent-foreground: #4d4c48;
+
+  --color-destructive: #b53333;       /* Error Crimson */
+  --color-destructive-foreground: #faf9f5;
+
+  --color-border: #f0eee6;            /* Border Cream */
+  --color-input: #f0eee6;
+  --color-ring: #3898ec;              /* Focus Blue — only cool color */
+
+  /* Chart palette — warm tones only */
+  --color-chart-1: #c96442;           /* Terracotta */
+  --color-chart-2: #d97757;           /* Coral */
+  --color-chart-3: #87867f;           /* Stone Gray */
+  --color-chart-4: #5e5d59;           /* Olive Gray */
+  --color-chart-5: #b0aea5;           /* Warm Silver */
+
+  /* Extra design tokens */
+  --color-olive: #5e5d59;
+  --color-stone: #87867f;
+  --color-warm-silver: #b0aea5;
+  --color-warm-sand: #e8e6dc;
+  --color-border-warm: #e8e6dc;
+  --color-ivory: #faf9f5;
+  --color-parchment: #f5f4ed;
+  --color-near-black: #141413;
+  --color-charcoal: #4d4c48;
+  --color-dark-surface: #30302e;
+  --color-terracotta: #c96442;
+  --color-coral: #d97757;
+
+  /* Radius scale */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+
+  /* Sidebar width */
+  --sidebar-width: 280px;
+  --sidebar-width-icon: 56px;
+}
+
+/* Dark theme overrides — DESIGN.md §1, §2, §6 */
+html.dark {
+  --color-background: #141413;           /* Deep Dark */
+  --color-foreground: #faf9f5;           /* Ivory */
+
+  --color-card: #30302e;                 /* Dark Surface */
+  --color-card-foreground: #faf9f5;
+
+  --color-popover: #30302e;
+  --color-popover-foreground: #faf9f5;
+
+  --color-primary: #c96442;              /* Terracotta — unchanged */
+  --color-primary-foreground: #faf9f5;
+
+  --color-secondary: #3d3d3a;            /* Dark Warm */
+  --color-secondary-foreground: #e8e6dc; /* Warm Sand */
+
+  --color-muted: #30302e;
+  --color-muted-foreground: #b0aea5;     /* Warm Silver */
+
+  --color-accent: #3d3d3a;
+  --color-accent-foreground: #e8e6dc;
+
+  --color-destructive: #b53333;
+  --color-destructive-foreground: #faf9f5;
+
+  --color-border: #30302e;               /* Border Dark */
+  --color-input: #30302e;
+  --color-ring: #3898ec;
+
+  --color-chart-1: #d97757;              /* Coral — slightly lighter for dark bg */
+  --color-chart-2: #c96442;
+  --color-chart-3: #b0aea5;
+  --color-chart-4: #87867f;
+  --color-chart-5: #5e5d59;
+
+  --color-olive: #b0aea5;               /* Inverted for readability */
+  --color-stone: #87867f;
+  --color-warm-silver: #b0aea5;
+  --color-warm-sand: #3d3d3a;
+  --color-border-warm: #3d3d3a;
+  --color-ivory: #faf9f5;
+  --color-parchment: #141413;
+  --color-near-black: #faf9f5;
+  --color-charcoal: #e8e6dc;
+  --color-dark-surface: #30302e;
+  --color-terracotta: #c96442;
+  --color-coral: #d97757;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: system-ui, -apple-system, 'Inter', 'Segoe UI', sans-serif;
+    line-height: 1.60;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+  h1, h2, h3, h4 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 500;
+    line-height: 1.20;
+  }
+  h1 { line-height: 1.10; }
+}
+
+/* Ring shadow system — DESIGN.md specifies ring shadows over drop shadows */
+@layer utilities {
+  .shadow-ring {
+    box-shadow: 0px 0px 0px 1px var(--color-border);
+  }
+  .shadow-ring-hover {
+    box-shadow: 0px 0px 0px 1px #d1cfc5;
+  }
+  .shadow-ring-active {
+    box-shadow: inset 0px 0px 0px 1px rgba(0,0,0,0.15);
+  }
+  .shadow-whisper {
+    box-shadow: rgba(0,0,0,0.05) 0px 4px 24px;
+  }
+}
+
+html.dark .shadow-ring-hover {
+  box-shadow: 0px 0px 0px 1px #5e5d59;
+}
