@@ -93,12 +93,22 @@ Full dark theme following Anthropic's warm-toned design system.
 
 ---
 
-## Quick Start
+## 🚀 Easy Setup (Windows) - แนะนำ
+
+หากคุณใช้งานบน **Windows** คุณสามารถติดตั้งและรันโปรแกรมได้ง่ายๆ ด้วยไฟล์เดียว:
+
+1. ดาวน์โหลดไฟล์ [**ClaudeDashboard.bat**](https://raw.githubusercontent.com/p2544/CheckClaudeUsageThEng/main/ClaudeDashboard.bat) (คลิกขวาแล้วเลือก "Save link as...")
+2. นำไปวางในโฟลเดอร์ที่คุณต้องการ
+3. **Double Click** ที่ไฟล์ `ClaudeDashboard.bat` จากนั้นรอให้โปรแกรมจัดการทุกอย่างให้โดยอัตโนมัติ
+
+---
+
+## 🛠 Manual Installation (สำหรับ Developer)
 
 ```bash
 # Clone
-git clone https://github.com/flukelaster/claude-usage.git
-cd claude-usage
+git clone https://github.com/p2544/CheckClaudeUsageThEng.git
+cd CheckClaudeUsageThEng
 
 # Install dependencies
 pnpm install
