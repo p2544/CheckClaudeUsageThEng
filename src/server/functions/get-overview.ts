@@ -72,7 +72,7 @@ function queryOverview(days: number | null) {
     projectId: sessions.projectId,
     displayName: projects.displayName,
     totalCost: sql<number>`coalesce(sum(${messages.estimatedCostUsd}), 0)`,
-    totalTokens: sql<number>`coalesce(sum(${messages.inputTokens} + ${messages.outputTokens}), 0)`,
+    totalTokens: sql<number>`coalesce(sum(${messages.inputTokens} + ${messages.outputTokens} + ${messages.cacheCreationTokens} + ${messages.cacheReadTokens}), 0)`,
   })
     .from(messages)
     .innerJoin(sessions, eq(messages.sessionId, sessions.id))

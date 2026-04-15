@@ -16,6 +16,8 @@ export const getProjects = createServerFn({ method: 'GET' }).handler(async () =>
     messageCount: sql<number>`coalesce(sum(${sessions.messageCount}), 0)`,
     totalInputTokens: sql<number>`coalesce(sum(${sessions.totalInputTokens}), 0)`,
     totalOutputTokens: sql<number>`coalesce(sum(${sessions.totalOutputTokens}), 0)`,
+    totalCacheCreationTokens: sql<number>`coalesce(sum(${sessions.totalCacheCreationTokens}), 0)`,
+    totalCacheReadTokens: sql<number>`coalesce(sum(${sessions.totalCacheReadTokens}), 0)`,
     totalCost: sql<number>`coalesce(sum(${sessions.totalCost}), 0)`,
   })
     .from(projects)
@@ -58,7 +60,7 @@ export const getProjectDetail = createServerFn({ method: 'GET' })
     const modelBreakdown = db.select({
       model: messages.model,
       totalCost: sql<number>`coalesce(sum(${messages.estimatedCostUsd}), 0)`,
-      totalTokens: sql<number>`coalesce(sum(${messages.inputTokens} + ${messages.outputTokens}), 0)`,
+      totalTokens: sql<number>`coalesce(sum(${messages.inputTokens} + ${messages.outputTokens} + ${messages.cacheCreationTokens} + ${messages.cacheReadTokens}), 0)`,
       messageCount: sql<number>`count(*)`,
     })
       .from(messages)

@@ -1,5 +1,5 @@
-import { homedir } from 'node:os'
-import { join, basename } from 'node:path'
+import { homedir, platform } from 'node:os'
+import { join, basename, sep } from 'node:path'
 import { readdirSync, statSync, readFileSync } from 'node:fs'
 
 /**
@@ -76,7 +76,9 @@ function smartDecodeFolderName(folderName: string): string | null {
   // The folder name uses - as separator, but actual paths may contain -
   // Strategy: build path from left, checking which segments exist as directories
   const parts = folderName.slice(1).split('-') // remove leading -
-  let currentPath = '/'
+  // On Windows, folder names start with e.g. -C-Users-... so root is drive letter
+  const isWindows = platform() === 'win32'
+  let currentPath = isWindows ? `${parts.shift()}:\\` : '/'
   let i = 0
 
   while (i < parts.length) {
@@ -115,7 +117,7 @@ export function getDisplayName(cwd: string): string {
     relative = cwd.slice(home.length + 1) // remove /Users/xxx/
   }
   // Use last 1-2 segments for a meaningful name
-  const segments = relative.split('/').filter(Boolean)
+  const segments = relative.split(/[/\\]/).filter(Boolean)
   if (segments.length <= 1) return segments[0] || cwd
   // Return last 2 segments joined with /
   return segments.slice(-2).join('/')
@@ -179,6 +181,5 @@ export function getSessionFiles(projectPath: string): string[] {
  * Files are named like: <uuid>.jsonl
  */
 export function extractSessionId(filePath: string): string {
-  const base = filePath.split('/').pop() || ''
-  return base.replace('.jsonl', '')
+  return basename(filePath, '.jsonl')
 }

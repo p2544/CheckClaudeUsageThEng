@@ -72,7 +72,7 @@ function ProjectsPage() {
                   <td className="px-4 py-3 text-right" style={{ color: 'var(--color-muted-foreground)' }}>{p.sessionCount}</td>
                   <td className="px-4 py-3 text-right" style={{ color: 'var(--color-muted-foreground)' }}>{p.messageCount}</td>
                   <td className="px-4 py-3 text-right" style={{ color: 'var(--color-muted-foreground)' }}>
-                    {formatTokens((p.totalInputTokens ?? 0) + (p.totalOutputTokens ?? 0))}
+                    {formatTokens((p.totalInputTokens ?? 0) + (p.totalOutputTokens ?? 0) + (p.totalCacheCreationTokens ?? 0) + (p.totalCacheReadTokens ?? 0))}
                   </td>
                   <td className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-foreground)' }}>
                     {formatCost(p.totalCost ?? 0)}

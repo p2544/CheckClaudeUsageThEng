@@ -39,7 +39,7 @@ function queryModelStats(days: number | null) {
     date: sql<string>`date(${messages.timestamp})`.as('date'),
     model: messages.model,
     cost: sql<number>`coalesce(sum(${messages.estimatedCostUsd}), 0)`,
-    tokens: sql<number>`coalesce(sum(${messages.inputTokens} + ${messages.outputTokens}), 0)`,
+    tokens: sql<number>`coalesce(sum(${messages.inputTokens} + ${messages.outputTokens} + ${messages.cacheCreationTokens} + ${messages.cacheReadTokens}), 0)`,
   })
     .from(messages)
     .where(and(timeFilter, sidechainFilter))
