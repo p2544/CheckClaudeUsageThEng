@@ -8,6 +8,7 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell,
 } from 'recharts'
 import { ArrowLeft } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 const chartColors = ['#c96442', '#d97757', '#87867f', '#5e5d59', '#b0aea5']
 
@@ -16,6 +17,7 @@ export const Route = createFileRoute('/projects/$projectId')({
 })
 
 function ProjectDetailPage() {
+  const { t } = useTranslation()
   const { projectId } = Route.useParams()
 
   const { data, isLoading } = useQuery({
@@ -35,8 +37,8 @@ function ProjectDetailPage() {
   if (!data) {
     return (
       <div className="py-20 text-center">
-        <p style={{ color: 'var(--color-muted-foreground)' }}>Project not found</p>
-        <Link to="/projects" className="mt-4 inline-block text-sm" style={{ color: 'var(--color-primary)' }}>Back to projects</Link>
+        <p style={{ color: 'var(--color-muted-foreground)' }}>{t('Project not found')}</p>
+        <Link to="/projects" className="mt-4 inline-block text-sm" style={{ color: 'var(--color-primary)' }}>{t('Back to projects')}</Link>
       </div>
     )
   }
@@ -53,7 +55,7 @@ function ProjectDetailPage() {
       {/* Header */}
       <div>
         <Link to="/projects" className="mb-2 inline-flex items-center gap-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          <ArrowLeft size={14} /> Projects
+          <ArrowLeft size={14} /> {t('Projects')}
         </Link>
         <h2 className="text-3xl">{project.displayName}</h2>
         <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>{project.cwd}</p>
@@ -63,7 +65,7 @@ function ProjectDetailPage() {
       <div className="grid grid-cols-2 gap-6">
         {/* Cost trend */}
         <div className="rounded-lg p-6" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-          <h3 className="mb-4 text-lg">Cost Trend</h3>
+          <h3 className="mb-4 text-lg">{t('Cost Trend')}</h3>
           <ResponsiveContainer width="100%" height={220}>
             <AreaChart data={dailyCost}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
@@ -71,7 +73,7 @@ function ProjectDetailPage() {
               <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickFormatter={(v) => `$${v.toFixed(0)}`} />
               <Tooltip
                 contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13 }}
-                formatter={(value: number) => [formatCost(value), 'Cost']}
+                formatter={(value: number) => [formatCost(value), t('Cost')]}
               />
               <Area type="monotone" dataKey="cost" stroke="#c96442" fill="#c96442" fillOpacity={0.15} strokeWidth={2} />
             </AreaChart>
@@ -80,9 +82,9 @@ function ProjectDetailPage() {
 
         {/* Model breakdown pie */}
         <div className="rounded-lg p-6" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-          <h3 className="mb-4 text-lg">Model Usage</h3>
+          <h3 className="mb-4 text-lg">{t('Model Usage')}</h3>
           {pieData.length === 0 ? (
-            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>No data</p>
+            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>{t('No data')}</p>
           ) : (
             <div className="flex items-center gap-6">
               <ResponsiveContainer width="50%" height={220}>
@@ -114,15 +116,15 @@ function ProjectDetailPage() {
 
       {/* Sessions table */}
       <div className="rounded-lg overflow-hidden" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-        <h3 className="px-6 py-4 text-lg" style={{ borderBottom: '1px solid var(--color-border)' }}>Sessions</h3>
+        <h3 className="px-6 py-4 text-lg" style={{ borderBottom: '1px solid var(--color-border)' }}>{t('Sessions')}</h3>
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Session</th>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Started</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Messages</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Tokens</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cost</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Session')}</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Started')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Messages')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Tokens')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cost')}</th>
             </tr>
           </thead>
           <tbody>

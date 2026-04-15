@@ -24,6 +24,8 @@ import {
 } from 'lucide-react'
 import { useTheme } from '~/lib/theme'
 import { ThemeToggle } from '~/components/theme-toggle'
+import { LanguageToggle } from '~/components/language-toggle'
+import { LanguageProvider, useTranslation } from '~/lib/i18n'
 import '~/styles/globals.css'
 
 const navItems = [
@@ -67,22 +69,25 @@ function RootComponent() {
 
   return (
     <RootDocument>
-      <QueryClientProvider client={queryClient}>
-        <div className="flex h-screen">
-          <Sidebar theme={theme} onToggleTheme={toggle} />
-          <main className="flex-1 overflow-y-auto p-8">
-            <div className="mx-auto max-w-[1200px]">
-              <Outlet />
-            </div>
-          </main>
-        </div>
-      </QueryClientProvider>
+      <LanguageProvider>
+        <QueryClientProvider client={queryClient}>
+          <div className="flex h-screen">
+            <Sidebar theme={theme} onToggleTheme={toggle} />
+            <main className="flex-1 overflow-y-auto p-8">
+              <div className="mx-auto max-w-[1200px]">
+                <Outlet />
+              </div>
+            </main>
+          </div>
+        </QueryClientProvider>
+      </LanguageProvider>
     </RootDocument>
   )
 }
 
 function Sidebar({ theme, onToggleTheme }: { theme: 'light' | 'dark'; onToggleTheme: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const { t } = useTranslation()
 
   return (
     <aside
@@ -106,13 +111,13 @@ function Sidebar({ theme, onToggleTheme }: { theme: 'light' | 'dark'; onToggleTh
                 lineHeight: 1.10,
               }}
             >
-              Claude Usage
+              {t('Claude Usage')}
             </h1>
             <p
               className="mt-0.5 text-xs"
               style={{ color: 'var(--color-muted-foreground)' }}
             >
-              Token & Cost Dashboard
+              {t('Token & Cost Dashboard')}
             </p>
           </div>
         </div>
@@ -139,7 +144,7 @@ function Sidebar({ theme, onToggleTheme }: { theme: 'light' | 'dark'; onToggleTh
                   }}
                 >
                   <Icon size={18} strokeWidth={1.8} />
-                  {item.label}
+                  {t(item.label)}
                 </Link>
               </li>
             )
@@ -153,9 +158,12 @@ function Sidebar({ theme, onToggleTheme }: { theme: 'light' | 'dark'; onToggleTh
         style={{ borderColor: 'var(--color-border)' }}
       >
         <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-          Local-only dashboard
+          {t('Local-only dashboard')}
         </p>
-        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        <div className="flex items-center gap-2">
+          <LanguageToggle />
+          <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+        </div>
       </div>
     </aside>
   )

@@ -5,15 +5,16 @@ import { formatTokens, formatCost, formatDuration } from '~/lib/format'
 import { getModelDisplayName } from '~/lib/pricing'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer,
 } from 'recharts'
 import { ArrowLeft } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/sessions/$sessionId')({
   component: SessionDetailPage,
 })
 
 function SessionDetailPage() {
+  const { t } = useTranslation()
   const { sessionId } = Route.useParams()
 
   const { data, isLoading } = useQuery({
@@ -33,9 +34,9 @@ function SessionDetailPage() {
   if (!data) {
     return (
       <div className="py-20 text-center">
-        <p style={{ color: 'var(--color-muted-foreground)' }}>Session not found</p>
+        <p style={{ color: 'var(--color-muted-foreground)' }}>{t('Session not found')}</p>
         <Link to="/sessions" className="mt-4 inline-block text-sm" style={{ color: 'var(--color-primary)' }}>
-          Back to sessions
+          {t('Back to sessions')}
         </Link>
       </div>
     )
@@ -52,10 +53,9 @@ function SessionDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <Link to="/sessions" className="mb-2 inline-flex items-center gap-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          <ArrowLeft size={14} /> Sessions
+          <ArrowLeft size={14} /> {t('Sessions')}
         </Link>
         <h2 className="text-3xl">{session.title || session.slug || session.id.slice(0, 8)}</h2>
         <div className="mt-1 flex items-center gap-3 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
@@ -63,9 +63,9 @@ function SessionDetailPage() {
             {session.projectName}
           </Link>
           <span>&middot;</span>
-          <span>{session.entrypoint === 'cli' ? 'CLI' : 'VS Code'}</span>
+          <span>{session.entrypoint === 'cli' ? 'CLI' : t('VS Code Extension')}</span>
           <span>&middot;</span>
-          <span>{session.messageCount} messages</span>
+          <span>{session.messageCount} {t('messages').toLowerCase()}</span>
           <span>&middot;</span>
           <span>{formatCost(session.totalCost ?? 0)}</span>
         </div>
@@ -74,15 +74,15 @@ function SessionDetailPage() {
       {/* Cumulative cost chart */}
       {cumulativeData.length > 1 && (
         <div className="rounded-lg p-6" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-          <h3 className="mb-4 text-lg">Cumulative Cost</h3>
+          <h3 className="mb-4 text-lg">{t('Cumulative Cost')}</h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={cumulativeData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0eee6" />
-              <XAxis dataKey="index" tick={{ fontSize: 11, fill: '#87867f' }} label={{ value: 'Message #', position: 'insideBottom', offset: -5, fill: '#87867f', fontSize: 11 }} />
+              <XAxis dataKey="index" tick={{ fontSize: 11, fill: '#87867f' }} label={{ value: t('Message #'), position: 'insideBottom', offset: -5, fill: '#87867f', fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11, fill: '#87867f' }} tickFormatter={(v) => `$${v.toFixed(2)}`} />
               <Tooltip
                 contentStyle={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)', borderRadius: 8, fontSize: 13 }}
-                formatter={(value: number) => [formatCost(value), 'Cumulative Cost']}
+                formatter={(value: number) => [formatCost(value), t('Cumulative Cost')]}
               />
               <Line type="monotone" dataKey="cost" stroke="#c96442" strokeWidth={2} dot={false} />
             </LineChart>
@@ -92,7 +92,7 @@ function SessionDetailPage() {
 
       {/* Message timeline */}
       <div className="rounded-lg p-6" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-        <h3 className="mb-4 text-lg">Message Timeline</h3>
+        <h3 className="mb-4 text-lg">{t('Message Timeline')}</h3>
         <div className="space-y-2">
           {messages.map((msg, i) => (
             <div
@@ -117,10 +117,10 @@ function SessionDetailPage() {
                 )}
               </div>
               <div className="flex items-center gap-4 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-                <span>in: {formatTokens(msg.inputTokens ?? 0)}</span>
-                <span>out: {formatTokens(msg.outputTokens ?? 0)}</span>
+                <span>{t('in:')} {formatTokens(msg.inputTokens ?? 0)}</span>
+                <span>{t('out:')} {formatTokens(msg.outputTokens ?? 0)}</span>
                 {(msg.cacheReadTokens ?? 0) > 0 && (
-                  <span style={{ color: 'var(--color-muted-foreground)' }}>cache: {formatTokens(msg.cacheReadTokens ?? 0)}</span>
+                  <span style={{ color: 'var(--color-muted-foreground)' }}>{t('cache:')} {formatTokens(msg.cacheReadTokens ?? 0)}</span>
                 )}
                 <span className="font-medium" style={{ color: 'var(--color-foreground)' }}>{formatCost(msg.estimatedCostUsd ?? 0)}</span>
               </div>

@@ -5,6 +5,7 @@ import { getActivityAll, getActivity30d, getActivity90d } from '~/server/functio
 import { formatCost, formatDuration } from '~/lib/format'
 import { PeriodFilter, getPeriodLabel, type Period } from '~/components/period-filter'
 import { Clock, Calendar, Timer } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/activity')({
   component: ActivityPage,
@@ -34,6 +35,7 @@ function formatHour(h: number): string {
 }
 
 function ActivityPage() {
+  const { t } = useTranslation()
   const [period, setPeriod] = useState<Period>('30d')
   const [metric, setMetric] = useState<'messages' | 'cost'>('messages')
 
@@ -59,9 +61,9 @@ function ActivityPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl">Peak Hours</h2>
+          <h2 className="text-3xl">{t('Peak Hours')}</h2>
           <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {data ? getPeriodLabel(data.days) : 'Loading...'}
+            {data ? getPeriodLabel(data.days, t) : t('Loading...')}
           </p>
         </div>
         <PeriodFilter value={period} onChange={setPeriod} />
@@ -72,7 +74,7 @@ function ActivityPage() {
         <div className="rounded-lg p-6" style={cardStyle}>
           <div className="flex items-center gap-2">
             <Clock size={18} style={{ color: 'var(--color-primary)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Busiest Hour</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Busiest Hour')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {data ? formatHour(data.busiestHour) : '—'}
@@ -81,16 +83,16 @@ function ActivityPage() {
         <div className="rounded-lg p-6" style={cardStyle}>
           <div className="flex items-center gap-2">
             <Calendar size={18} style={{ color: 'var(--color-muted-foreground)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Busiest Day</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Busiest Day')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
-            {data ? DAY_LABELS[data.busiestDay] : '—'}
+            {data ? t(DAY_LABELS[data.busiestDay]) : '—'}
           </p>
         </div>
         <div className="rounded-lg p-6" style={cardStyle}>
           <div className="flex items-center gap-2">
             <Timer size={18} style={{ color: 'var(--color-muted-foreground)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Avg Session Length</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Avg Session Length')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {data ? formatDuration(data.avgSessionDurationMs) : '—'}
@@ -101,7 +103,7 @@ function ActivityPage() {
       {/* Heatmap */}
       <div className="rounded-lg p-6" style={cardStyle}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg">Activity Heatmap</h3>
+          <h3 className="text-lg">{t('Activity Heatmap')}</h3>
           <div className="flex rounded-lg p-1" style={{ backgroundColor: 'var(--color-secondary)' }}>
             {(['messages', 'cost'] as const).map((m) => (
               <button
@@ -115,7 +117,7 @@ function ActivityPage() {
                   boxShadow: metric === m ? '0px 0px 0px 1px var(--color-border)' : 'none',
                 }}
               >
-                {m}
+                {t(m)}
               </button>
             ))}
           </div>
@@ -145,7 +147,7 @@ function ActivityPage() {
                   className="text-xs w-10 text-right"
                   style={{ color: 'var(--color-muted-foreground)' }}
                 >
-                  {DAY_LABELS[dow]}
+                  {t(DAY_LABELS[dow])}
                 </span>
                 {Array.from({ length: 24 }, (_, h) => {
                   const cell = heatmap.get(`${dow}-${h}`)
@@ -161,7 +163,7 @@ function ActivityPage() {
                         backgroundColor: val > 0 ? '#c96442' : 'var(--color-secondary)',
                         opacity: val > 0 ? Math.max(0.15, intensity) : 1,
                       }}
-                      title={`${DAY_LABELS[dow]} ${formatHour(h)}: ${cell ? `${cell.messageCount} msgs, ${formatCost(cell.cost)}` : 'No activity'}`}
+                      title={`${t(DAY_LABELS[dow])} ${formatHour(h)}: ${cell ? `${cell.messageCount} ${t('msgs')}, ${formatCost(cell.cost)}` : t('No activity')}`}
                     />
                   )
                 })}
@@ -170,7 +172,7 @@ function ActivityPage() {
 
             {/* Legend */}
             <div className="mt-4 flex items-center gap-2 text-xs" style={{ color: 'var(--color-muted-foreground)', marginLeft: 44 }}>
-              <span>Less</span>
+              <span>{t('Less')}</span>
               {[0.15, 0.35, 0.55, 0.75, 1].map((opacity) => (
                 <div
                   key={opacity}
@@ -178,7 +180,7 @@ function ActivityPage() {
                   style={{ width: 16, height: 16, backgroundColor: '#c96442', opacity }}
                 />
               ))}
-              <span>More</span>
+              <span>{t('More')}</span>
             </div>
           </div>
         )}

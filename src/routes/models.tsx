@@ -9,6 +9,7 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Legend,
 } from 'recharts'
+import { useTranslation } from '~/lib/i18n'
 
 const chartColors: Record<string, string> = {
   'claude-opus-4-6': '#c96442',
@@ -29,6 +30,7 @@ export const Route = createFileRoute('/models')({
 })
 
 function ModelsPage() {
+  const { t } = useTranslation()
   const [period, setPeriod] = useState<Period>('30d')
 
   const { data, isLoading } = useQuery({
@@ -41,7 +43,7 @@ function ModelsPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl">Models</h2>
+          <h2 className="text-3xl">{t('Models')}</h2>
           <PeriodFilter value={period} onChange={setPeriod} />
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -71,9 +73,9 @@ function ModelsPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl">Models</h2>
+          <h2 className="text-3xl">{t('Models')}</h2>
           <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            Usage comparison across Claude models ({getPeriodLabel(data.days)})
+            {t('Usage comparison across Claude models')} ({getPeriodLabel(data.days, t)})
           </p>
         </div>
         <PeriodFilter value={period} onChange={setPeriod} />
@@ -97,33 +99,33 @@ function ModelsPage() {
             </div>
             <div className="grid grid-cols-2 gap-y-3 text-sm">
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Total Cost</p>
+                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Total Cost')}</p>
                 <p className="font-medium" style={{ fontFamily: 'Georgia, serif', color: 'var(--color-foreground)' }}>
                   {formatCost(m.totalCost)}
                 </p>
               </div>
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Sessions</p>
+                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Sessions')}</p>
                 <p className="font-medium" style={{ fontFamily: 'Georgia, serif', color: 'var(--color-foreground)' }}>
                   {m.sessionCount}
                 </p>
               </div>
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Input Tokens</p>
+                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Input Tokens')}</p>
                 <p style={{ color: 'var(--color-muted-foreground)' }}>{formatTokens(m.totalInputTokens)}</p>
               </div>
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Output Tokens</p>
+                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Output Tokens')}</p>
                 <p style={{ color: 'var(--color-muted-foreground)' }}>{formatTokens(m.totalOutputTokens)}</p>
               </div>
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Avg Cost/Session</p>
+                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Avg Cost/Session')}</p>
                 <p style={{ color: 'var(--color-muted-foreground)' }}>
                   {m.sessionCount > 0 ? formatCost(m.totalCost / m.sessionCount) : '—'}
                 </p>
               </div>
               <div>
-                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Messages</p>
+                <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Messages')}</p>
                 <p style={{ color: 'var(--color-muted-foreground)' }}>{m.messageCount}</p>
               </div>
             </div>
@@ -133,7 +135,7 @@ function ModelsPage() {
 
       {/* Daily trend by model */}
       <div className="rounded-lg p-6" style={{ backgroundColor: 'var(--color-card)', border: '1px solid var(--color-border)' }}>
-        <h3 className="mb-4 text-lg">Daily Cost by Model</h3>
+        <h3 className="mb-4 text-lg">{t('Daily Cost by Model')}</h3>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={pivotedDaily}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0eee6" />

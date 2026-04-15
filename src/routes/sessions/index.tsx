@@ -3,12 +3,14 @@ import { useQuery } from '@tanstack/react-query'
 import { getSessions } from '~/server/functions/get-sessions'
 import { formatTokens, formatCost, formatRelativeTime } from '~/lib/format'
 import { Terminal, Code } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/sessions/')({
   component: SessionsPage,
 })
 
 function SessionsPage() {
+  const { t } = useTranslation()
   const { data: sessionsList, isLoading } = useQuery({
     queryKey: ['sessions'],
     queryFn: () => getSessions(),
@@ -18,9 +20,9 @@ function SessionsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl">Sessions</h2>
+        <h2 className="text-3xl">{t('Sessions')}</h2>
         <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          All Claude Code sessions
+          {t('All Claude Code sessions')}
         </p>
       </div>
 
@@ -28,12 +30,12 @@ function SessionsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Session</th>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Project</th>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Started</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Messages</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Tokens</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cost</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Session')}</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Project')}</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Started')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Messages')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Tokens')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cost')}</th>
             </tr>
           </thead>
           <tbody>
@@ -50,7 +52,7 @@ function SessionsPage() {
             ) : sessionsList?.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center" style={{ color: 'var(--color-muted-foreground)' }}>
-                  No sessions found. Click "Sync Now" on the overview page to import logs.
+                  {t('No sessions found. Click "Sync Now" on the overview page to import logs.')}
                 </td>
               </tr>
             ) : (

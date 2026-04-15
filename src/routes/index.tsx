@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { ExportButton } from '~/components/export-button'
 import { RefreshCw, Coins, FolderOpen, Zap, Terminal, Code } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/')({
   component: OverviewPage,
@@ -39,6 +40,7 @@ const tooltipStyle = {
 function OverviewPage() {
   const queryClient = useQueryClient()
   const [period, setPeriod] = useState<Period>('30d')
+  const { t } = useTranslation()
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['overview', period],
@@ -61,7 +63,7 @@ function OverviewPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <p className="text-lg" style={{ color: 'var(--color-muted-foreground)' }}>Failed to load dashboard data</p>
+        <p className="text-lg" style={{ color: 'var(--color-muted-foreground)' }}>{t('Failed to load dashboard data')}</p>
         <button
           type="button"
           onClick={() => syncMutation.mutate()}
@@ -69,7 +71,7 @@ function OverviewPage() {
           style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-primary-foreground)' }}
         >
           <RefreshCw size={16} />
-          Sync Logs
+          {t('Sync Logs')}
         </button>
       </div>
     )
@@ -79,7 +81,7 @@ function OverviewPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl">Overview</h2>
+          <h2 className="text-3xl">{t('Overview')}</h2>
           <PeriodFilter value={period} onChange={setPeriod} />
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -102,11 +104,11 @@ function OverviewPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl">Overview</h2>
+          <h2 className="text-3xl">{t('Overview')}</h2>
           <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {getPeriodLabel(data.days)}
+            {getPeriodLabel(data.days, t)}
             {lastSync && (
-              <span> &middot; Synced {formatRelativeTime(new Date(lastSync))}</span>
+              <span> &middot; {t('Synced')} {formatRelativeTime(new Date(lastSync))}</span>
             )}
           </p>
         </div>
@@ -124,7 +126,7 @@ function OverviewPage() {
             }}
           >
             <RefreshCw size={16} className={syncMutation.isPending ? 'animate-spin' : ''} />
-            {syncMutation.isPending ? 'Syncing...' : 'Sync Now'}
+            {syncMutation.isPending ? t('Syncing...') : t('Sync Now')}
           </button>
         </div>
       </div>
@@ -141,17 +143,17 @@ function OverviewPage() {
       {/* KPI row — 3 cards */}
       <div className="grid grid-cols-3 gap-4">
         <KpiCard
-          label="Estimated Cost"
+          label={t('Estimated Cost')}
           value={formatCost(kpi.totalCost)}
           icon={<Coins size={18} style={{ color: 'var(--color-primary)' }} />}
         />
         <KpiCard
-          label="Active Projects"
+          label={t('Active Projects')}
           value={String(kpi.activeProjects)}
           icon={<FolderOpen size={18} style={{ color: 'var(--color-muted-foreground)' }} />}
         />
         <KpiCard
-          label="Cache Hit Rate"
+          label={t('Cache Hit Rate')}
           value={formatPercent(kpi.cacheHitRate)}
           icon={<Zap size={18} style={{ color: 'var(--color-muted-foreground)' }} />}
         />
@@ -170,13 +172,13 @@ function OverviewPage() {
       <div className="grid grid-cols-2 gap-6">
         {/* Daily Cost Trend */}
         <div className="rounded-lg p-6" style={cardStyle}>
-          <h3 className="mb-4 text-lg">Daily Cost Trend</h3>
+          <h3 className="mb-4 text-lg">{t('Daily Cost Trend')}</h3>
           <ResponsiveContainer width="100%" height={240}>
             <AreaChart data={dailyCost}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0eee6" />
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#87867f' }} tickFormatter={(d) => d.slice(5)} />
               <YAxis tick={{ fontSize: 11, fill: '#87867f' }} tickFormatter={(v) => `$${v.toFixed(0)}`} />
-              <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [formatCost(value), 'Cost']} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [formatCost(value), t('Cost')]} />
               <Area type="monotone" dataKey="cost" stroke="#c96442" fill="#c96442" fillOpacity={0.15} strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
@@ -184,17 +186,17 @@ function OverviewPage() {
 
         {/* Token Mix */}
         <div className="rounded-lg p-6" style={cardStyle}>
-          <h3 className="mb-4 text-lg">Daily Token Mix</h3>
+          <h3 className="mb-4 text-lg">{t('Daily Token Mix')}</h3>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={dailyCost}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0eee6" />
               <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#87867f' }} tickFormatter={(d) => d.slice(5)} />
               <YAxis tick={{ fontSize: 11, fill: '#87867f' }} tickFormatter={(v) => formatTokens(v)} />
               <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatTokens(value)} />
-              <Bar dataKey="inputTokens" stackId="a" fill="#c96442" name="Input" />
-              <Bar dataKey="outputTokens" stackId="a" fill="#d97757" name="Output" />
-              <Bar dataKey="cacheCreationTokens" stackId="a" fill="#87867f" name="Cache Write" />
-              <Bar dataKey="cacheReadTokens" stackId="a" fill="#b0aea5" name="Cache Read" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="inputTokens" stackId="a" fill="#c96442" name={t('Input')} />
+              <Bar dataKey="outputTokens" stackId="a" fill="#d97757" name={t('Output')} />
+              <Bar dataKey="cacheCreationTokens" stackId="a" fill="#87867f" name={t('Cache Write')} />
+              <Bar dataKey="cacheReadTokens" stackId="a" fill="#b0aea5" name={t('Cache Read')} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -204,15 +206,15 @@ function OverviewPage() {
       <div className="grid grid-cols-2 gap-6">
         {/* Top Projects */}
         <div className="rounded-lg p-6" style={cardStyle}>
-          <h3 className="mb-4 text-lg">Top Projects</h3>
+          <h3 className="mb-4 text-lg">{t('Top Projects')}</h3>
           {topProjects.length === 0 ? (
-            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>No data yet</p>
+            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>{t('No data yet')}</p>
           ) : (
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={topProjects} layout="vertical">
                 <XAxis type="number" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickFormatter={(v) => formatCost(v)} />
                 <YAxis type="category" dataKey="displayName" width={140} tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} />
-                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [formatCost(value), 'Cost']} />
+                <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [formatCost(value), t('Cost')]} />
                 <Bar dataKey="totalCost" radius={[0, 4, 4, 0]}>
                   {topProjects.map((_, i) => (
                     <Cell key={i} fill={chartColors[i % chartColors.length]} />
@@ -225,9 +227,9 @@ function OverviewPage() {
 
         {/* Recent Sessions */}
         <div className="rounded-lg p-6" style={cardStyle}>
-          <h3 className="mb-4 text-lg">Recent Sessions</h3>
+          <h3 className="mb-4 text-lg">{t('Recent Sessions')}</h3>
           {recentSessions.length === 0 ? (
-            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>No sessions yet</p>
+            <p className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>{t('No sessions yet')}</p>
           ) : (
             <div className="space-y-1">
               {recentSessions.map((s) => (
@@ -278,13 +280,14 @@ function TokenBreakdownCard({ total, input, output, cacheCreation, cacheRead }: 
   total: number; input: number; output: number; cacheCreation: number; cacheRead: number
 }) {
   const values = { input, output, cacheCreation, cacheRead }
+  const { t } = useTranslation()
 
   return (
     <div className="rounded-lg p-6" style={cardStyle}>
       <div className="flex items-end gap-8">
         {/* Total */}
         <div className="shrink-0">
-          <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Total Tokens</p>
+          <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Total Tokens')}</p>
           <p className="mt-1 text-3xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {formatTokens(total)}
           </p>
@@ -292,15 +295,15 @@ function TokenBreakdownCard({ total, input, output, cacheCreation, cacheRead }: 
 
         {/* Breakdown items */}
         <div className="flex flex-1 items-end gap-6">
-          {tokenTypes.map((t) => {
-            const val = values[t.key]
+          {tokenTypes.map((tInfo) => {
+            const val = values[tInfo.key]
             const pct = total > 0 ? (val / total) * 100 : 0
             return (
-              <div key={t.key} className="flex-1 min-w-0">
+              <div key={tInfo.key} className="flex-1 min-w-0">
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1.5">
-                    <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: t.color }} />
-                    <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t.label}</span>
+                    <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: tInfo.color }} />
+                    <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t(tInfo.label)}</span>
                   </div>
                   <span className="text-xs tabular-nums" style={{ color: 'var(--color-muted-foreground)' }}>
                     {pct < 0.1 ? '<0.1' : pct.toFixed(1)}%
@@ -309,7 +312,7 @@ function TokenBreakdownCard({ total, input, output, cacheCreation, cacheRead }: 
                 <div className="h-2 w-full rounded-full overflow-hidden" style={{ backgroundColor: 'var(--color-secondary)' }}>
                   <div
                     className="h-full rounded-full transition-all"
-                    style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: t.color }}
+                    style={{ width: `${Math.min(pct, 100)}%`, backgroundColor: tInfo.color }}
                   />
                 </div>
                 <p className="mt-1.5 text-sm font-medium tabular-nums" style={{ color: 'var(--color-foreground)' }}>

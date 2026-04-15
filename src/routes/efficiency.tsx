@@ -9,6 +9,7 @@ import {
   ResponsiveContainer, LineChart, Line, Legend, ZAxis
 } from 'recharts'
 import { Terminal, Code } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/efficiency')({
   component: EfficiencyPage,
@@ -35,6 +36,7 @@ const tooltipStyle = {
 }
 
 function EfficiencyPage() {
+  const { t } = useTranslation()
   const [period, setPeriod] = useState<Period>('30d')
 
   const { data, isLoading } = useQuery({
@@ -47,7 +49,7 @@ function EfficiencyPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl">Efficiency</h2>
+          <h2 className="text-3xl">{t('Efficiency')}</h2>
           <PeriodFilter value={period} onChange={setPeriod} />
         </div>
         <div className="grid grid-cols-2 gap-4">
@@ -73,9 +75,9 @@ function EfficiencyPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl">Efficiency</h2>
+          <h2 className="text-3xl">{t('Efficiency')}</h2>
           <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {getPeriodLabel(data.days)} — session cost analysis
+            {getPeriodLabel(data.days, t)} {t('— session cost analysis')}
           </p>
         </div>
         <PeriodFilter value={period} onChange={setPeriod} />
@@ -88,18 +90,20 @@ function EfficiencyPage() {
             label="CLI"
             icon={<Terminal size={20} />}
             data={cliData}
+            t={t}
           />
         )}
         {vscodeData && (
           <EntrypointCard
-            label="VS Code Extension"
+            label={t('VS Code Extension')}
             icon={<Code size={20} />}
             data={vscodeData}
+            t={t}
           />
         )}
         {!cliData && !vscodeData && (
           <div className="rounded-lg p-6" style={cardStyle}>
-            <p style={{ color: 'var(--color-muted-foreground)' }}>No session data available</p>
+            <p style={{ color: 'var(--color-muted-foreground)' }}>{t('No session data available')}</p>
           </div>
         )}
       </div>
@@ -108,16 +112,16 @@ function EfficiencyPage() {
       <div className="grid grid-cols-2 gap-6">
         {/* Scatter: Cost vs Messages */}
         <div className="rounded-lg p-6" style={cardStyle}>
-          <h3 className="mb-4 text-lg">Cost vs Messages per Session</h3>
+          <h3 className="mb-4 text-lg">{t('Cost vs Messages per Session')}</h3>
           <ResponsiveContainer width="100%" height={260}>
             <ScatterChart>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
               <XAxis
-                dataKey="messageCount" type="number" name="Messages"
+                dataKey="messageCount" type="number" name={t('Messages')}
                 tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
               />
               <YAxis
-                dataKey="totalCost" type="number" name="Cost"
+                dataKey="totalCost" type="number" name={t('Cost')}
                 tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }}
                 tickFormatter={(v) => `$${v.toFixed(0)}`}
               />
@@ -125,7 +129,7 @@ function EfficiencyPage() {
               <Tooltip
                 contentStyle={tooltipStyle}
                 formatter={(value: number, name: string) => [
-                  name === 'Cost' ? formatCost(value) : value,
+                  name === t('Cost') ? formatCost(value) : value,
                   name,
                 ]}
               />
@@ -136,7 +140,7 @@ function EfficiencyPage() {
                 <Scatter name="VS Code" data={vscodeScatter} fill="#d97757" />
               )}
               {cliScatter.length === 0 && vscodeScatter.length === 0 && (
-                <Scatter name="Sessions" data={data.scatterData} fill="#c96442" />
+                <Scatter name={t('Sessions')} data={data.scatterData} fill="#c96442" />
               )}
               <Legend />
             </ScatterChart>
@@ -145,7 +149,7 @@ function EfficiencyPage() {
 
         {/* Weekly avg cost trend */}
         <div className="rounded-lg p-6" style={cardStyle}>
-          <h3 className="mb-4 text-lg">Avg Cost per Session (Weekly)</h3>
+          <h3 className="mb-4 text-lg">{t('Avg Cost per Session (Weekly)')}</h3>
           <ResponsiveContainer width="100%" height={260}>
             <LineChart data={data.weeklyAvgCost}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
@@ -159,7 +163,7 @@ function EfficiencyPage() {
               />
               <Tooltip
                 contentStyle={tooltipStyle}
-                formatter={(value: number) => [formatCost(value), 'Avg Cost']}
+                formatter={(value: number) => [formatCost(value), t('Avg Cost')]}
               />
               <Line type="monotone" dataKey="avgCost" stroke="#c96442" strokeWidth={2} dot={false} />
             </LineChart>
@@ -170,18 +174,18 @@ function EfficiencyPage() {
       {/* Ranked sessions table */}
       <div className="rounded-lg overflow-hidden" style={cardStyle}>
         <h3 className="px-4 py-3 text-lg" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          Most Expensive Sessions (per message)
+          {t('Most Expensive Sessions (per message)')}
         </h3>
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
               <th className="px-4 py-3 text-left font-medium w-10" style={{ color: 'var(--color-muted-foreground)' }}>#</th>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Session</th>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Project</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Session')}</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Project')}</th>
               <th className="px-4 py-3 text-center font-medium w-10" style={{ color: 'var(--color-muted-foreground)' }}></th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Messages</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cost</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>$/msg</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Messages')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cost')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('$/msg')}</th>
             </tr>
           </thead>
           <tbody>
@@ -223,10 +227,11 @@ function EfficiencyPage() {
   )
 }
 
-function EntrypointCard({ label, icon, data }: {
+function EntrypointCard({ label, icon, data, t }: {
   label: string
   icon: React.ReactNode
   data: { sessionCount: number; totalCost: number; avgCost: number; totalTokens: number; avgMessages: number }
+  t: (k: string) => string
 }) {
   return (
     <div className="rounded-lg p-6" style={cardStyle}>
@@ -235,11 +240,11 @@ function EntrypointCard({ label, icon, data }: {
         <h3 className="text-lg">{label}</h3>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        <Stat label="Sessions" value={String(data.sessionCount)} />
-        <Stat label="Total Cost" value={formatCost(data.totalCost)} />
-        <Stat label="Avg Cost/Session" value={formatCost(data.avgCost)} />
-        <Stat label="Avg Messages/Session" value={Math.round(data.avgMessages).toLocaleString()} />
-        <Stat label="Total Tokens" value={formatTokens(data.totalTokens)} />
+        <Stat label={t('Sessions')} value={String(data.sessionCount)} />
+        <Stat label={t('Total Cost')} value={formatCost(data.totalCost)} />
+        <Stat label={t('Avg Cost/Session')} value={formatCost(data.avgCost)} />
+        <Stat label={t('Avg Messages/Session')} value={Math.round(data.avgMessages).toLocaleString()} />
+        <Stat label={t('Total Tokens')} value={formatTokens(data.totalTokens)} />
       </div>
     </div>
   )

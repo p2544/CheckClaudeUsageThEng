@@ -9,6 +9,7 @@ import {
   ResponsiveContainer, Legend,
 } from 'recharts'
 import { FlaskConical } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/what-if')({
   component: WhatIfPage,
@@ -46,6 +47,7 @@ const tooltipStyle = {
 }
 
 function WhatIfPage() {
+  const { t } = useTranslation()
   const [period, setPeriod] = useState<Period>('30d')
   const [targetFamily, setTargetFamily] = useState<string>('')
 
@@ -62,7 +64,7 @@ function WhatIfPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl">What-If Analysis</h2>
+          <h2 className="text-3xl">{t('What-If Analysis')}</h2>
           <PeriodFilter value={period} onChange={setPeriod} />
         </div>
         <div className="grid grid-cols-3 gap-4">
@@ -97,9 +99,9 @@ function WhatIfPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl">What-If Analysis</h2>
+          <h2 className="text-3xl">{t('What-If Analysis')}</h2>
           <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {getPeriodLabel(data.days)} — model cost simulation
+            {getPeriodLabel(data.days, t)} {t('— model cost simulation')}
           </p>
         </div>
         <PeriodFilter value={period} onChange={setPeriod} />
@@ -108,19 +110,19 @@ function WhatIfPage() {
       {/* KPI cards */}
       <div className="grid grid-cols-3 gap-4">
         <div className="rounded-lg p-6" style={cardStyle}>
-          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Total Actual Cost</span>
+          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Total Actual Cost')}</span>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {formatCost(data.totalActualCost)}
           </p>
         </div>
         <div className="rounded-lg p-6" style={cardStyle}>
-          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Models Used</span>
+          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Models Used')}</span>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {data.modelBreakdown.length}
           </p>
         </div>
         <div className="rounded-lg p-6" style={cardStyle}>
-          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Most Expensive Model</span>
+          <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Most Expensive Model')}</span>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {mostExpensive?.displayName ?? '—'}
           </p>
@@ -134,7 +136,7 @@ function WhatIfPage() {
       <div className="rounded-lg p-6" style={cardStyle}>
         <div className="flex items-center gap-3 mb-6">
           <FlaskConical size={20} style={{ color: 'var(--color-primary)' }} />
-          <h3 className="text-lg">What if everything was...</h3>
+          <h3 className="text-lg">{t('What if everything was...')}</h3>
           <select
             value={activeTarget}
             onChange={(e) => setTargetFamily(e.target.value)}
@@ -155,14 +157,14 @@ function WhatIfPage() {
         {/* Result */}
         <div className="flex items-center gap-8 mb-6">
           <div>
-            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Actual Cost</p>
+            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Actual Cost')}</p>
             <p className="text-2xl font-medium tabular-nums" style={{ fontFamily: 'Georgia, serif', color: 'var(--color-foreground)' }}>
               {formatCost(data.totalActualCost)}
             </p>
           </div>
           <span className="text-2xl" style={{ color: 'var(--color-muted-foreground)' }}>→</span>
           <div>
-            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Simulated Cost</p>
+            <p className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Simulated Cost')}</p>
             <p className="text-2xl font-medium tabular-nums" style={{ fontFamily: 'Georgia, serif', color: 'var(--color-foreground)' }}>
               {formatCost(simulatedTotal)}
             </p>
@@ -177,7 +179,7 @@ function WhatIfPage() {
               {isSaving ? '' : '+'}{formatCost(Math.abs(delta))} ({deltaPercent > 0 ? '+' : ''}{deltaPercent.toFixed(1)}%)
             </p>
             <p className="text-xs" style={{ color: isSaving ? '#4a8c5c' : 'var(--color-destructive)' }}>
-              {isSaving ? 'You would save' : 'Would cost more'}
+              {isSaving ? t('You would save') : t('Would cost more')}
             </p>
           </div>
         </div>
@@ -197,8 +199,8 @@ function WhatIfPage() {
             />
             <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => formatCost(value)} />
             <Legend />
-            <Bar dataKey="actual" name="Actual" fill="#c96442" radius={[0, 4, 4, 0]} barSize={16} />
-            <Bar dataKey="simulated" name="Simulated" fill="#87867f" radius={[0, 4, 4, 0]} barSize={16} />
+            <Bar dataKey="actual" name={t('Actual')} fill="#c96442" radius={[0, 4, 4, 0]} barSize={16} />
+            <Bar dataKey="simulated" name={t('Simulated')} fill="#87867f" radius={[0, 4, 4, 0]} barSize={16} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -206,17 +208,17 @@ function WhatIfPage() {
       {/* Full cost matrix */}
       <div className="rounded-lg overflow-hidden" style={cardStyle}>
         <h3 className="px-4 py-3 text-lg" style={{ borderBottom: '1px solid var(--color-border)' }}>
-          Full Cost Matrix
+          {t('Full Cost Matrix')}
         </h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
                 <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>
-                  Source Model
+                  {t('Source Model')}
                 </th>
                 <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>
-                  Actual
+                  {t('Actual')}
                 </th>
                 {data.allModelFamilies.map((f) => (
                   <th
@@ -263,7 +265,7 @@ function WhatIfPage() {
               {/* Total row */}
               <tr style={{ backgroundColor: 'var(--color-secondary)' }}>
                 <td className="px-4 py-3 font-medium" style={{ color: 'var(--color-foreground)', fontFamily: 'Georgia, serif' }}>
-                  Total
+                  {t('Total')}
                 </td>
                 <td className="px-4 py-3 text-right tabular-nums font-medium" style={{ color: 'var(--color-foreground)' }}>
                   {formatCost(data.totalActualCost)}

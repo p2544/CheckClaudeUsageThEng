@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { exportPdf30d, exportPdf90d, exportPdfAll } from '~/server/functions/export-pdf'
 import type { Period } from './period-filter'
 import { FileDown } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 const exportFns = {
   '30d': exportPdf30d,
@@ -28,6 +29,7 @@ function downloadBase64Pdf(base64: string, filename: string) {
 export function ExportButton({ period }: { period: Period }) {
   const [showModal, setShowModal] = useState(false)
   const [accountName, setAccountName] = useState('')
+  const { t } = useTranslation()
 
   const exportMutation = useMutation({
     mutationFn: async (name: string) => {
@@ -53,7 +55,7 @@ export function ExportButton({ period }: { period: Period }) {
         }}
       >
         <FileDown size={16} />
-        Export PDF
+        {t('Export PDF')}
       </button>
 
       {/* Modal */}
@@ -71,20 +73,20 @@ export function ExportButton({ period }: { period: Period }) {
               className="text-lg mb-1"
               style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}
             >
-              Export PDF Report
+              {t('Export PDF Report')}
             </h3>
             <p className="text-xs mb-4" style={{ color: 'var(--color-muted-foreground)' }}>
-              Report will include all dashboard data for the selected period.
+              {t('Report will include all dashboard data for the selected period.')}
             </p>
 
             <label className="block text-xs mb-1.5" style={{ color: 'var(--color-muted-foreground)' }}>
-              Account Name
+              {t('Account Name')}
             </label>
             <input
               type="text"
               value={accountName}
               onChange={(e) => setAccountName(e.target.value)}
-              placeholder="e.g. John Doe, Team Alpha"
+              placeholder={t("e.g. John Doe, Team Alpha")}
               className="w-full rounded-lg px-3 py-2 text-sm outline-none"
               style={{
                 backgroundColor: 'var(--color-background)',
@@ -104,7 +106,7 @@ export function ExportButton({ period }: { period: Period }) {
                 className="rounded-lg px-4 py-2 text-sm"
                 style={{ color: 'var(--color-muted-foreground)' }}
               >
-                Cancel
+                {t('Cancel')}
               </button>
               <button
                 type="button"
@@ -116,12 +118,12 @@ export function ExportButton({ period }: { period: Period }) {
                 {exportMutation.isPending ? (
                   <>
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-                    Generating...
+                    {t('Generating...')}
                   </>
                 ) : (
                   <>
                     <FileDown size={16} />
-                    Download PDF
+                    {t('Download PDF')}
                   </>
                 )}
               </button>
@@ -129,7 +131,7 @@ export function ExportButton({ period }: { period: Period }) {
 
             {exportMutation.isError && (
               <p className="mt-3 text-xs" style={{ color: 'var(--color-destructive)' }}>
-                Failed to generate PDF. Please try again.
+                {t('Failed to generate PDF. Please try again.')}
               </p>
             )}
           </div>

@@ -1,7 +1,10 @@
 import { Moon, Sun } from 'lucide-react'
 import { type Theme } from '~/lib/theme'
+import { useTranslation } from '~/lib/i18n'
 
 export function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () => void }) {
+  const { t } = useTranslation()
+
   return (
     <button
       type="button"
@@ -11,10 +14,10 @@ export function ThemeToggle({ theme, onToggle }: { theme: Theme; onToggle: () =>
         backgroundColor: 'var(--color-secondary)',
         color: 'var(--color-secondary-foreground)',
       }}
-      title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+      title={theme === 'light' ? t('Switch to dark mode') : t('Switch to light mode')}
     >
       {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-      {theme === 'light' ? 'Dark' : 'Light'}
+      {theme === 'light' ? t('Dark') : t('Light')}
     </button>
   )
 }

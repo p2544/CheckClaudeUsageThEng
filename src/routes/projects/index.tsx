@@ -2,12 +2,14 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { getProjects } from '~/server/functions/get-projects'
 import { formatTokens, formatCost, formatRelativeTime } from '~/lib/format'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/projects/')({
   component: ProjectsPage,
 })
 
 function ProjectsPage() {
+  const { t } = useTranslation()
   const { data: projectsList, isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: () => getProjects(),
@@ -17,9 +19,9 @@ function ProjectsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl">Projects</h2>
+        <h2 className="text-3xl">{t('Projects')}</h2>
         <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          All projects with Claude Code usage
+          {t('All projects with Claude Code usage')}
         </p>
       </div>
 
@@ -27,12 +29,12 @@ function ProjectsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Project</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Sessions</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Messages</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Tokens</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cost</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Last Active</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Project')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Sessions')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Messages')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Tokens')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cost')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Last Active')}</th>
             </tr>
           </thead>
           <tbody>
@@ -49,7 +51,7 @@ function ProjectsPage() {
             ) : projectsList?.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-4 py-8 text-center" style={{ color: 'var(--color-muted-foreground)' }}>
-                  No projects found. Sync logs first.
+                  {t('No projects found. Sync logs first.')}
                 </td>
               </tr>
             ) : (

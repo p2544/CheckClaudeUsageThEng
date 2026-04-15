@@ -1,12 +1,14 @@
+import { useTranslation } from '~/lib/i18n'
+
 export type Period = 'all' | '90d' | '30d'
 
-const periodLabels: Record<Period, string> = {
-  all: 'All Time',
-  '90d': '90 Days',
-  '30d': '30 Days',
-}
-
 export function PeriodFilter({ value, onChange }: { value: Period; onChange: (p: Period) => void }) {
+  const { t } = useTranslation()
+  const periodLabels: Record<Period, string> = {
+    all: t('All Time'),
+    '90d': t('90 Days'),
+    '30d': t('30 Days'),
+  }
   const periods: Period[] = ['30d', '90d', 'all']
   return (
     <div
@@ -32,7 +34,7 @@ export function PeriodFilter({ value, onChange }: { value: Period; onChange: (p:
   )
 }
 
-export function getPeriodLabel(days: number | null): string {
-  if (!days) return 'All time'
-  return `Last ${days} days`
+export function getPeriodLabel(days: number | null, t: (k: string) => string): string {
+  if (!days) return t('All time')
+  return t(`Last ${days} days`)
 }

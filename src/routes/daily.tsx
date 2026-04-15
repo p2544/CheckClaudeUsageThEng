@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getDailyUsageAll, getDailyUsage30d, getDailyUsage90d } from '~/server/functions/get-daily-usage'
 import { formatTokens, formatCost } from '~/lib/format'
 import { PeriodFilter, getPeriodLabel, type Period } from '~/components/period-filter'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/daily')({
   component: DailyPage,
@@ -21,6 +22,7 @@ function formatNumber(n: number): string {
 
 function DailyPage() {
   const [period, setPeriod] = useState<Period>('30d')
+  const { t } = useTranslation()
 
   const { data, isLoading } = useQuery({
     queryKey: ['daily-usage', period],
@@ -32,9 +34,9 @@ function DailyPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl">Daily Usage</h2>
+          <h2 className="text-3xl">{t('Daily Usage')}</h2>
           <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-            {data ? getPeriodLabel(data.days) : 'Loading...'} — like <code className="rounded px-1.5 py-0.5 text-xs" style={{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-secondary-foreground)' }}>ccusage daily</code>
+            {data ? getPeriodLabel(data.days, t) : t('Loading...')} {t('— like')} <code className="rounded px-1.5 py-0.5 text-xs" style={{ backgroundColor: 'var(--color-secondary)', color: 'var(--color-secondary-foreground)' }}>ccusage daily</code>
           </p>
         </div>
         <PeriodFilter value={period} onChange={setPeriod} />
@@ -44,14 +46,14 @@ function DailyPage() {
         <table className="w-full text-sm">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Date</th>
-              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Models</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Input</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Output</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cache Create</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cache Read</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Total Tokens</th>
-              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>Cost (USD)</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Date')}</th>
+              <th className="px-4 py-3 text-left font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Models')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Input')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Output')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cache Create')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cache Read')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Total Tokens')}</th>
+              <th className="px-4 py-3 text-right font-medium" style={{ color: 'var(--color-muted-foreground)' }}>{t('Cost (USD)')}</th>
             </tr>
           </thead>
           <tbody>
@@ -68,7 +70,7 @@ function DailyPage() {
             ) : data?.daily.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-4 py-8 text-center" style={{ color: 'var(--color-muted-foreground)' }}>
-                  No usage data found. Sync logs first.
+                  {t('No usage data found. Sync logs first.')}
                 </td>
               </tr>
             ) : (
@@ -119,7 +121,7 @@ function DailyPage() {
                 {data && (
                   <tr style={{ backgroundColor: 'var(--color-secondary)' }}>
                     <td className="px-4 py-3 font-medium" style={{ color: 'var(--color-foreground)', fontFamily: 'Georgia, serif' }}>
-                      Total
+                      {t('Total')}
                     </td>
                     <td className="px-4 py-3" />
                     <td className="px-4 py-3 text-right tabular-nums font-medium" style={{ color: 'var(--color-foreground)' }}>

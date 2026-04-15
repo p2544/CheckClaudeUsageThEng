@@ -8,6 +8,7 @@ import {
   ResponsiveContainer, Cell
 } from 'recharts'
 import { TrendingUp, TrendingDown, Minus, DollarSign, Target } from 'lucide-react'
+import { useTranslation } from '~/lib/i18n'
 
 export const Route = createFileRoute('/forecast')({
   component: ForecastPage,
@@ -30,6 +31,7 @@ const tooltipStyle = {
 }
 
 function ForecastPage() {
+  const { t } = useTranslation()
   const { data, isLoading } = useQuery({
     queryKey: ['forecast'],
     queryFn: () => getForecast(),
@@ -52,7 +54,7 @@ function ForecastPage() {
   if (isLoading || !data) {
     return (
       <div className="space-y-6">
-        <h2 className="text-3xl">Cost Forecast</h2>
+        <h2 className="text-3xl">{t('Cost Forecast')}</h2>
         <div className="grid grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
             <div key={i} className="rounded-lg p-6 animate-pulse" style={cardStyle}>
@@ -78,9 +80,9 @@ function ForecastPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl">Cost Forecast</h2>
+        <h2 className="text-3xl">{t('Cost Forecast')}</h2>
         <p className="mt-1 text-sm" style={{ color: 'var(--color-muted-foreground)' }}>
-          {data.monthLabel} — {data.daysElapsed} days elapsed, {data.daysRemaining} remaining
+          {data.monthLabel} — {data.daysElapsed} {t('days elapsed')}, {data.daysRemaining} {t('remaining')}
         </p>
       </div>
 
@@ -89,7 +91,7 @@ function ForecastPage() {
         <div className="rounded-lg p-6" style={cardStyle}>
           <div className="flex items-center gap-2">
             <DollarSign size={18} style={{ color: 'var(--color-primary)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Spent So Far</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Spent So Far')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {formatCost(data.monthSpendSoFar)}
@@ -99,7 +101,7 @@ function ForecastPage() {
         <div className="rounded-lg p-6" style={cardStyle}>
           <div className="flex items-center gap-2">
             <TrendIcon size={18} style={{ color: data.burnRateTrend === 'increasing' ? 'var(--color-destructive)' : data.burnRateTrend === 'decreasing' ? '#4a8c5c' : 'var(--color-muted-foreground)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Projected Total</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Projected Total')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {formatCost(data.projectedTotal)}
@@ -109,7 +111,7 @@ function ForecastPage() {
         <div className="rounded-lg p-6" style={cardStyle}>
           <div className="flex items-center gap-2">
             <Target size={18} style={{ color: 'var(--color-muted-foreground)' }} />
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>Daily Average</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('Daily Average')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{ fontFamily: 'Georgia, serif', fontWeight: 500, color: 'var(--color-foreground)' }}>
             {formatCost(data.dailyAverage)}
@@ -121,7 +123,7 @@ function ForecastPage() {
             {vsLastMonth > 0
               ? <TrendingUp size={18} style={{ color: 'var(--color-destructive)' }} />
               : <TrendingDown size={18} style={{ color: '#4a8c5c' }} />}
-            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>vs Last Month</span>
+            <span className="text-xs" style={{ color: 'var(--color-muted-foreground)' }}>{t('vs Last Month')}</span>
           </div>
           <p className="mt-2 text-2xl" style={{
             fontFamily: 'Georgia, serif', fontWeight: 500,
@@ -130,7 +132,7 @@ function ForecastPage() {
             {vsLastMonth > 0 ? '+' : ''}{vsLastMonth.toFixed(1)}%
           </p>
           <p className="mt-0.5 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
-            Last month: {formatCost(data.previousMonthTotal)}
+            {t('Last month:')} {formatCost(data.previousMonthTotal)}
           </p>
         </div>
       </div>
@@ -139,14 +141,14 @@ function ForecastPage() {
       <div className="rounded-lg p-6" style={cardStyle}>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>Monthly Budget</span>
+            <span className="text-sm font-medium" style={{ color: 'var(--color-foreground)' }}>{t('Monthly Budget')}</span>
             <div className="flex items-center gap-1">
               <span className="text-sm" style={{ color: 'var(--color-muted-foreground)' }}>$</span>
               <input
                 type="number"
                 value={budget}
                 onChange={(e) => saveBudget(e.target.value)}
-                placeholder="Set budget..."
+                placeholder={t("Set budget...")}
                 className="w-28 rounded-lg px-2 py-1 text-sm outline-none"
                 style={{
                   backgroundColor: 'var(--color-background)',
@@ -174,13 +176,13 @@ function ForecastPage() {
 
       {/* Daily cost chart with projections */}
       <div className="rounded-lg p-6" style={cardStyle}>
-        <h3 className="mb-4 text-lg">Daily Spending</h3>
+        <h3 className="mb-4 text-lg">{t('Daily Spending')}</h3>
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={data.chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
             <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickFormatter={(d) => d.slice(5)} />
             <YAxis tick={{ fontSize: 11, fill: 'var(--color-muted-foreground)' }} tickFormatter={(v) => `$${v.toFixed(0)}`} />
-            <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [formatCost(value), 'Cost']} />
+            <Tooltip contentStyle={tooltipStyle} formatter={(value: number) => [formatCost(value), t('Cost')]} />
             {budgetNum > 0 && (
               <CartesianGrid horizontal={false} vertical={false}>
                 {/* Budget line rendered via reference line would be ideal but we'll keep it simple */}
@@ -202,11 +204,11 @@ function ForecastPage() {
         <div className="mt-3 flex items-center gap-6 text-xs" style={{ color: 'var(--color-muted-foreground)' }}>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ backgroundColor: '#c96442' }} />
-            Actual
+            {t('Actual')}
           </div>
           <div className="flex items-center gap-1.5">
             <div className="h-3 w-3 rounded" style={{ backgroundColor: '#c96442', opacity: 0.3 }} />
-            Projected
+            {t('Projected')}
           </div>
         </div>
       </div>
